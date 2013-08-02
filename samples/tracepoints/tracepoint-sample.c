@@ -55,3 +55,36 @@ module_exit(sample_exit)
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Mathieu Desnoyers");
 MODULE_DESCRIPTION("Tracepoint sample");
+
+printk("datamodule")
+
+if
+
+DEFINE_TRACE(subsys_event);
+DEFINE_TRACE(subsys_eventb);
+
+struct proc_dir_entry *pentry_sample;
+
+static int my_open(struct inode *inode, struct file *file)
+{
+	int i;
+
+	trace_subsys_event(inode, file);
+	for (i = 0; i < 10; i++)
+		trace_subsys_eventb();
+	return -EPERM;
+}
+
+static const struct file_operations mark_ops = {
+	.open = my_open,
+	.llseek = noop_llseek,
+};
+
+static int __init sample_init(void)
+{
+	printk(KERN_ALERT "sample init\n");
+	pentry_sample = proc_create("tracepoint-sample", 0444, NULL,
+		&mark_ops);
+	if (!pentry_sample)
+		return -EPERM;
+	return 0;
