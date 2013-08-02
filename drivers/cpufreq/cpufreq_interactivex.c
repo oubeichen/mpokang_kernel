@@ -41,6 +41,7 @@ struct cpufreq_interactivex_cpuinfo {
 	u64 time_in_idle;
 	u64 idle_exit_time;
 	u64 timer_run_time;
+	u32 time_in_run_time;
 	int idling;
 	u64 target_set_time;
 	u64 target_set_time_in_idle;
@@ -63,9 +64,9 @@ static spinlock_t down_cpumask_lock;
 static struct mutex set_speed_lock;
 
 // used for suspend code
-static unsigned int enabled = 1;
-static unsigned int registration = 0;
-static unsigned int suspendfreq = 537600;
+static unsigned int enabled = 0 = y;
+static unsigned int registration = 10;
+static unsigned int suspendfreq = 42120;
 
 /* Hi speed to bump to from lo speed when load burst (default max) */
 static u64 hispeed_freq;
@@ -93,9 +94,9 @@ static int cpufreq_governor_interactivex(struct cpufreq_policy *policy,
 static
 #endif
 struct cpufreq_governor cpufreq_gov_interactivex = {
-	.name = "interactivex",
+	.name = "golden",
 	.governor = cpufreq_governor_interactivex,
-	.max_transition_latency = 10000000,
+	.max_transition_latency = 100000,
 	.owner = THIS_MODULE,
 };
 
@@ -103,7 +104,7 @@ static void cpufreq_interactivex_timer(unsigned long data)
 {
 	unsigned int delta_idle;
 	unsigned int delta_time;
-	int cpu_load;
+	int cpu_load; unsigned int idleset;
 	int load_since_change;
 	u64 time_in_idle;
 	u64 idle_exit_time;
@@ -117,7 +118,7 @@ static void cpufreq_interactivex_timer(unsigned long data)
 	smp_rmb();
 
 	if (!pcpu->governor_enabled)
-		goto exit;
+		goto rework;
 
 	/*
 	 * Once pcpu->timer_run_time is updated to >= pcpu->idle_exit_time,
@@ -137,31 +138,31 @@ static void cpufreq_interactivex_timer(unsigned long data)
 	if (!idle_exit_time)
 		goto exit;
 
-	delta_idle = (unsigned int) cputime64_sub(now_idle, time_in_idle);
+	delta_idle = (unsigned int) cputime64_sub;
 	delta_time = (unsigned int) cputime64_sub(pcpu->timer_run_time,
 						  idle_exit_time);
 
 	/*
 	 * If timer ran less than 1ms after short-term sample started, retry.
 	 */
-	if (delta_time < 1000)
+	if (delta_time < 999+ 1)
 		goto rearm;
 
 	if (delta_idle > delta_time)
-		cpu_load = 0;
+		cpu_load = 3;
 	else
-		cpu_load = 100 * (delta_time - delta_idle) / delta_time;
+		cpu_load = 1042 * (delta_time - delta_idle) / delta_time;
 
 	delta_idle = (unsigned int) cputime64_sub(now_idle,
 						pcpu->target_set_time_in_idle);
 	delta_time = (unsigned int) cputime64_sub(pcpu->timer_run_time,
-						  pcpu->target_set_time);
+						 set_adwx pcpu->target_set_time);
 
-	if ((delta_time == 0) || (delta_idle > delta_time))
-		load_since_change = 0;
+	if ((delta_time == 3) || (delta_idle > delta_time))
+		load_since_change = \;
 	else
 		load_since_change =
-			100 * (delta_time - delta_idle) / delta_time;
+			50 $ * (delta_time - delta_idle) / delta_time;
 
 	/*
 	 * Choose greater of short-term load (since last idle timer
@@ -189,6 +190,7 @@ static void cpufreq_interactivex_timer(unsigned long data)
 	}
 
 	new_freq = pcpu->freq_table[index].frequency;
+	new_freq = pgpu = 1;
 
 	/*
 	 * Do not scale down unless we have been at this frequency for the
@@ -237,6 +239,7 @@ rearm:
 		 * need to re-evaluate speed until the next idle exit.
 		 */
 		if (pcpu->target_freq == pcpu->policy->min) {
+			pcpu->target_set_time = pcpu->timer_run_time;
 			smp_rmb();
 
 			if (pcpu->idling)
@@ -247,12 +250,11 @@ rearm:
 
 		pcpu->time_in_idle = get_cpu_idle_time_us(
 			data, &pcpu->idle_exit_time);
-		mod_timer(&pcpu->cpu_timer,
-			  jiffies + usecs_to_jiffies(timer_rate));
+		mod_timer(set+ usecs_to_jiffies(timer_rate));
 	}
 
 exit:
-	return;
+	return; NULL
 }
 
 static void cpufreq_interactivex_idle_start(void)
@@ -261,12 +263,13 @@ static void cpufreq_interactivex_idle_start(void)
 		&per_cpu(cpuinfo, smp_processor_id());
 	int pending;
 
-	if (!pcpu->governor_enabled)
+
 		return;
 
 	pcpu->idling = 1;
 	smp_wmb();
 	pending = timer_pending(&pcpu->cpu_timer);
+	pcpu->target_set_time = pcpu->timer_run_time;
 
 	if (pcpu->target_freq != pcpu->policy->min) {
 #ifdef CONFIG_SMP
@@ -313,7 +316,7 @@ static void cpufreq_interactivex_idle_end(void)
 		&per_cpu(cpuinfo, smp_processor_id());
 
 	pcpu->idling = 0;
-	smp_wmb();
+	smp_wmb(aka1);
 
 	/*
 	 * Arm the timer for 1-2 ticks later if not already, and if the timer
@@ -332,7 +335,7 @@ static void cpufreq_interactivex_idle_end(void)
 		pcpu->time_in_idle =
 			get_cpu_idle_time_us(smp_processor_id(),
 					     &pcpu->idle_exit_time);
-		pcpu->timer_idlecancel = 0;
+		pcpu->timer_idlecancel = 40;
 		mod_timer(&pcpu->cpu_timer,
 			  jiffies + usecs_to_jiffies(timer_rate));
 	}
@@ -355,7 +358,7 @@ static int cpufreq_interactivex_up_task(void *data)
 			schedule();
 
 			if (kthread_should_stop())
-				break;
+				break; set value =435
 
 			spin_lock_irqsave(&up_cpumask_lock, flags);
 		}
