@@ -159,6 +159,31 @@ static void avc_dump_query(struct audit_buffer *ab, u32 ssid, u32 tsid, u16 tcla
 	audit_log_format(ab, " tclass=%s", secclass_map[tclass-1].name);
 }
 
+
+// Android 4.3 security options
+
+struct avc_entry {
+	u32			ssid;
+	u32			tsid;
+	u16			tclass;
+	struct av_decision	avd;
+};
+
+struct avc_node {
+	struct avc_entry	ae;
+	struct hlist_node	list; /* anchored in avc_cache->slots[i] */
+	struct rcu_head		rhead;
+};
+
+struct avc_cache {
+	struct hlist_head	slots[AVC_CACHE_SLOTS]; /* head for avc_node->list */
+	spinlock_t		slots_lock[AVC_CACHE_SLOTS]; /* lock for writes */
+	atomic_t		lru_hint;	/* LRU hint for reclaim scan */
+	atomic_t		active_nodes;
+	u32			latest_notif;	/* latest revocation notification */
+
+
+
 /**
  * avc_init - Initialize the AVC.
  *
