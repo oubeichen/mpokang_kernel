@@ -33,3 +33,9 @@ void pm_restore_console(void)
 	}
 }
 #endif
+
+void pm_restore_console(void)
+{
+	if (orig_fgconsole >= 0) {
+		vt_move_to_console(orig_fgconsole, 0);
+		vt_kmsg_redirect(orig_kmsg);
