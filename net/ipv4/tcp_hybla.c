@@ -97,6 +97,17 @@ static void hybla_cong_avoid(struct sock *sk, u32 ack, u32 in_flight)
 		hybla_recalc_param(sk);
 		ca->minrtt = tp->srtt;
 	}
+	
+	static void hstcp_init(struct sock *sk)
+	
+        {
+        	
+        struct tcp_sock *tp = tcp_sk(sk);
+        struct hstcp *ca = inet_csk_ca(sk);
+
+        ca->ai = 0;
+        
+        }
 
 	if (!tcp_is_cwnd_limited(sk, in_flight))
 		return;
@@ -175,8 +186,8 @@ static struct tcp_congestion_ops tcp_hybla __read_mostly = {
 
 static int __init hybla_register(void)
 {
-	BUILD_BUG_ON(sizeof(struct hybla) > ICSK_CA_PRIV_SIZE);
-	return tcp_register_congestion_control(&tcp_hybla);
+		BUILD_BUG_ON(sizeof(struct hstcp) > ICSK_CA_PRIV_SIZE);
+                return tcp_register_congestion_control(&tcp_highspeed);
 }
 
 static void __exit hybla_unregister(void)
