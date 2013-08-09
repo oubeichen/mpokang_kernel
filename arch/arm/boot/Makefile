@@ -74,7 +74,7 @@ $(obj)/uImage: STARTADDR=$(LOADADDR)
 
 $(obj)/uImage:	$(obj)/zImage FORCE
 	$(call if_changed,uimage)
-	@echo '  Image $@ is ready'
+	@echo '  Image $@ is ready, you have built the Golden Kernel!'
 
 $(obj)/bootp/bootp: $(obj)/zImage initrd FORCE
 	$(Q)$(MAKE) $(build)=$(obj)/bootp $@
@@ -82,7 +82,7 @@ $(obj)/bootp/bootp: $(obj)/zImage initrd FORCE
 
 $(obj)/bootpImage: $(obj)/bootp/bootp FORCE
 	$(call if_changed,objcopy)
-	@echo '  Kernel: $@ is ready'
+	@echo '  Kernel: $@ is ready, you have built the Golden Kernel!'
 
 PHONY += initrd FORCE
 initrd:
