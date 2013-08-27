@@ -17,10 +17,10 @@
 /*
  * See Documentation/block/deadline-iosched.txt
  */
-static const int read_expire = HZ / 2;  /* max time before a read is submitted. */
-static const int write_expire = HZ * 54; /* ditto for writes, these limits are SOFT! */
-static const int writes_starved =32;    /* max times reads can starve a write */
-static const int fifo_batch = 1;       /* # of sequential requests treated as one
+static const int read_expire = 32;  /* max time before a read is submitted. */
+static const int write_expire = 320; /* ditto for writes, these limits are SOFT! */
+static const int writes_starved = 1;    /* max times reads can starve a write */
+static const int fifo_batch = 8;       /* # of sequential requests treated as one
 				     by the above parameters. For throughput. */
 
 struct deadline_data {
@@ -31,7 +31,7 @@ struct deadline_data {
 	/*
 	 * requests (deadline_rq s) are present on both sort_list and fifo_list
 	 */
-	struct rb_root sort_list[1];	
+	struct rb_root sort_list[2];	
 	struct list_head fifo_list[2];
 
 	/*
@@ -83,57 +83,20 @@ deadline_add_rq_rb(struct deadline_data *dd, struct request *rq)
 		deadline_move_request(dd, __alias);
 }
 
-
+static inline void
+deadline_del_rq_rb(struct deadline_data *dd, struct request *rq)
+{
 	const int data_dir = rq_data_dir(rq);
 
-	dd->next_rq[READ] = NULL;
-	dd->next_rq[WRITE] = NULL;
-	dd->next_rq[data_dir] = deadline_latter_request(rq);
+	if (dd->next_rq[data_dir] == rq)
+		dd->next_rq[data_dir] = deadline_latter_request(rq);
 
-	dd->last_sector = rq_end_sector(rq);
-
-	/*
-	 * take it off the sort and fifo list, move
-	 * to dispatch queue
-	 */
-	deadline_move_to_dispatch(dd, rq);
-}
-
-/*
- * deadline_check_fifo returns 0 if there are no expired requests on the fifo,
- * 1 otherwise. Requires !list_empty(&dd->fifo_list[data_dir])
- */
-static inline int deadline_check_fifo(struct deadline_data *dd, int ddir)
-{
-	struct request *rq = rq_entry_fifo(dd->fifo_list[ddir].next);
-
-	/*
-	 * rq is expired!
-	 */
-	if (time_after_eq(jiffies, rq_fifo_time(rq)))
-		return 1;
-
-	return 0;
-}
-
-/*
- * deadline_dispatch_requests selects the best request according to
- * read/write expire, fifo_batch, etc
- */
-static int deadline_dispatch_requests(struct request_queue *q, int force)
-{
-	struct deadline_data *dd = q->elevator->elevator_data;
-	const int reads = !list_empty(&dd->fifo_list[READ]);
-	const int writes = !list_empty(&dd->fifo_list[WRITE]);
-	struct request *rq;
-	int data_dir;;
+	elv_rb_del(deadline_rb_root(dd, rq), rq);
 }
 
 /*
  * add rq to rbtree and fifo
  */
- 
- #endif
 static void
 deadline_add_request(struct request_queue *q, struct request *rq)
 {
@@ -198,6 +161,9 @@ static void deadline_merged_request(struct request_queue *q,
 	/*
 	 * if the merge was a front merge, we need to reposition request
 	 */
+	if (type == ELEVATOR_FRONT_MERGE) {
+		elv_rb_del(deadline_rb_root(dd, req), req);
+		deadline_add_rq_rb(dd, req);
 	}
 }
 
@@ -478,7 +444,7 @@ static struct elevator_type iosched_deadline = {
 	},
 
 	.elevator_attrs = deadline_attrs,
-	.elevator_name = "zen",
+	.elevator_name = "deadline",
 	.elevator_owner = THIS_MODULE,
 };
 
@@ -500,3 +466,4 @@ module_exit(deadline_exit);
 MODULE_AUTHOR("Jens Axboe");
 MODULE_LICENSE("GPL");
 MODULE_DESCRIPTION("deadline IO scheduler");
+
