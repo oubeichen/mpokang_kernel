@@ -1,10 +1,10 @@
 	\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	
-	Linux kernel release 3.x <http://kernel.org/> // Golden Kernel 1.6
+	Linux kernel release 3.x <http://kernel.org/> // Mpokang Kernel 1.6
 	
 	//////////////////////////////////////////////////////////////////
 	
-	          Use "0_golden_defconfig" for compile this kernel
+	          Use "mpokang_defconfig" for compile this kernel
 
 These are the release notes for Linux version 3.  Read them carefully,
 as they tell you what this is all about, explain how to install the
