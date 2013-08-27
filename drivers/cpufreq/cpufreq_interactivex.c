@@ -44,7 +44,6 @@
 static atomic_t active_count = ATOMIC_INIT(0);
 
 struct cpufreq_interactivex_cpuinfo {
-<<<<<<< HEAD
 struct timer_list cpu_timer;
 int timer_idlecancel;
 u64 time_in_idle;
@@ -57,20 +56,6 @@ struct cpufreq_policy *policy;
 struct cpufreq_frequency_table *freq_table;
 unsigned int target_freq;
 int governor_enabled;
-=======
-	struct timer_list cpu_timer;
-	int timer_idlecancel;
-	u64 time_in_idle;
-	u64 idle_exit_time;
-	u64 timer_run_time;
-	int idling;
-	u64 target_set_time;
-	u64 target_set_time_in_idle;
-	struct cpufreq_policy *policy;
-	struct cpufreq_frequency_table *freq_table;
-	unsigned int target_freq;
-	int governor_enabled;
->>>>>>> parent of 3225e78... Finetuned Golden Governor
 };
 
 static DEFINE_PER_CPU(struct cpufreq_interactivex_cpuinfo, cpuinfo);
@@ -116,24 +101,17 @@ unsigned int event);
 static
 #endif
 struct cpufreq_governor cpufreq_gov_interactivex = {
-<<<<<<< HEAD
 .name = "GoldenX",
 .governor = cpufreq_governor_interactivex,
 .max_transition_latency = 10000000,
 .owner = THIS_MODULE,
-=======
-	.name = "interactivex",
-	.governor = cpufreq_governor_interactivex,
-	.max_transition_latency = 10000000,
-	.owner = THIS_MODULE,
->>>>>>> parent of 3225e78... Finetuned Golden Governor
 };
 
 static void cpufreq_interactivex_timer(unsigned long data)
 {
 	unsigned int delta_idle;
 	unsigned int delta_time;
-	int cpu_load;
+	int cpu_load; unsigned int idleset;
 	int load_since_change;
 	u64 time_in_idle;
 	u64 idle_exit_time;
@@ -147,7 +125,7 @@ static void cpufreq_interactivex_timer(unsigned long data)
 	smp_rmb();
 
 	if (!pcpu->governor_enabled)
-		goto exit;
+		goto rework;
 
 	/*
 	 * Once pcpu->timer_run_time is updated to >= pcpu->idle_exit_time,
@@ -167,14 +145,13 @@ static void cpufreq_interactivex_timer(unsigned long data)
 	if (!idle_exit_time)
 		goto exit;
 
-	delta_idle = (unsigned int) cputime64_sub(now_idle, time_in_idle);
+	delta_idle = (unsigned int) cputime64_sub;
 	delta_time = (unsigned int) cputime64_sub(pcpu->timer_run_time,
 						  idle_exit_time);
 
 	/*
 	 * If timer ran less than 1ms after short-term sample started, retry.
 	 */
-<<<<<<< HEAD
 
 
 		if (delta_time < 1000)
@@ -184,26 +161,6 @@ if (delta_idle > delta_time)
 cpu_load = 0;
 else
 cpu_load = 100 * (delta_time - delta_idle) / delta_time;
-=======
-	if (delta_time < 1000)
-		goto rearm;
-
-	if (delta_idle > delta_time)
-		cpu_load = 0;
-	else
-		cpu_load = 100 * (delta_time - delta_idle) / delta_time;
-
-	delta_idle = (unsigned int) cputime64_sub(now_idle,
-						pcpu->target_set_time_in_idle);
-	delta_time = (unsigned int) cputime64_sub(pcpu->timer_run_time,
-						  pcpu->target_set_time);
-
-	if ((delta_time == 0) || (delta_idle > delta_time))
-		load_since_change = 0;
-	else
-		load_since_change =
-			100 * (delta_time - delta_idle) / delta_time;
->>>>>>> parent of 3225e78... Finetuned Golden Governor
 
 delta_idle = (unsigned int) cputime64_sub(now_idle,
 pcpu->target_set_time_in_idle);
@@ -226,31 +183,12 @@ cpu_load = load_since_change;
 
 if (cpu_load >= go_hispeed_load) {
                 if (pcpu->target_freq <= pcpu->policy->min) {
-<<<<<<< HEAD
 new_freq = hispeed_freq;
 } else
 new_freq = pcpu->policy->max * cpu_load / 100;
 } else {
 new_freq = pcpu->policy->cur * cpu_load / 100;
 }
-=======
-			new_freq = hispeed_freq;
-		} else
-			new_freq = pcpu->policy->max * cpu_load / 100;
-	} else {
-		new_freq = pcpu->policy->cur * cpu_load / 100;
-	}
-
-	if (cpufreq_frequency_table_target(pcpu->policy, pcpu->freq_table,
-					   new_freq, CPUFREQ_RELATION_H,
-					   &index)) {
-		pr_warn_once("timer %d: cpufreq_frequency_table_target error\n",
-			     (int) data);
-		goto rearm;
-	}
-
-	new_freq = pcpu->freq_table[index].frequency;
->>>>>>> parent of 3225e78... Finetuned Golden Governor
 
 if (cpufreq_frequency_table_target(pcpu->policy, pcpu->freq_table,
 new_freq, CPUFREQ_RELATION_H,
@@ -302,7 +240,6 @@ if (pcpu->target_freq == pcpu->policy->max)
 goto exit;
 
 rearm:
-<<<<<<< HEAD
 if (!timer_pending(&pcpu->cpu_timer)) {
 /*
 * If already at min: if that CPU is idle, don't set timer.
@@ -326,31 +263,6 @@ jiffies + usecs_to_jiffies(timer_rate));
 
 exit:
 return;
-=======
-	if (!timer_pending(&pcpu->cpu_timer)) {
-		/*
-		 * If already at min: if that CPU is idle, don't set timer.
-		 * Else cancel the timer if that CPU goes idle.  We don't
-		 * need to re-evaluate speed until the next idle exit.
-		 */
-		if (pcpu->target_freq == pcpu->policy->min) {
-			smp_rmb();
-
-			if (pcpu->idling)
-				goto exit;
-
-			pcpu->timer_idlecancel = 1;
-		}
-
-		pcpu->time_in_idle = get_cpu_idle_time_us(
-			data, &pcpu->idle_exit_time);
-		mod_timer(&pcpu->cpu_timer,
-			  jiffies + usecs_to_jiffies(timer_rate));
-	}
-
-exit:
-	return;
->>>>>>> parent of 3225e78... Finetuned Golden Governor
 }
 
 static void cpufreq_interactivex_idle_start(void)
@@ -359,7 +271,6 @@ struct cpufreq_interactivex_cpuinfo *pcpu =
 &per_cpu(cpuinfo, smp_processor_id());
 int pending;
 
-<<<<<<< HEAD
 if (!pcpu->governor_enabled)
 return;
 
@@ -368,16 +279,6 @@ smp_wmb();
 pending = timer_pending(&pcpu->cpu_timer);
 
 if (pcpu->target_freq != pcpu->policy->min) {
-=======
-	if (!pcpu->governor_enabled)
-		return;
-
-	pcpu->idling = 1;
-	smp_wmb();
-	pending = timer_pending(&pcpu->cpu_timer);
-
-	if (pcpu->target_freq != pcpu->policy->min) {
->>>>>>> parent of 3225e78... Finetuned Golden Governor
 #ifdef CONFIG_SMP
 /*
 * Entering idle while not at lowest speed. On some
@@ -421,7 +322,6 @@ static void cpufreq_interactivex_idle_end(void)
 struct cpufreq_interactivex_cpuinfo *pcpu =
 &per_cpu(cpuinfo, smp_processor_id());
 
-<<<<<<< HEAD
 pcpu->idling = 0;
 smp_wmb();
 
@@ -446,32 +346,6 @@ pcpu->timer_idlecancel = 0;
 mod_timer(&pcpu->cpu_timer,
 jiffies + usecs_to_jiffies(timer_rate));
 }
-=======
-	pcpu->idling = 0;
-	smp_wmb();
-
-	/*
-	 * Arm the timer for 1-2 ticks later if not already, and if the timer
-	 * function has already processed the previous load sampling
-	 * interval.  (If the timer is not pending but has not processed
-	 * the previous interval, it is probably racing with us on another
-	 * CPU.  Let it compute load based on the previous sample and then
-	 * re-arm the timer for another interval when it's done, rather
-	 * than updating the interval start time to be "now", which doesn't
-	 * give the timer function enough time to make a decision on this
-	 * run.)
-	 */
-	if (timer_pending(&pcpu->cpu_timer) == 0 &&
-	    pcpu->timer_run_time >= pcpu->idle_exit_time &&
-	    pcpu->governor_enabled) {
-		pcpu->time_in_idle =
-			get_cpu_idle_time_us(smp_processor_id(),
-					     &pcpu->idle_exit_time);
-		pcpu->timer_idlecancel = 0;
-		mod_timer(&pcpu->cpu_timer,
-			  jiffies + usecs_to_jiffies(timer_rate));
-	}
->>>>>>> parent of 3225e78... Finetuned Golden Governor
 
 }
 
@@ -490,13 +364,8 @@ if (cpumask_empty(&up_cpumask)) {
 spin_unlock_irqrestore(&up_cpumask_lock, flags);
 schedule();
 
-<<<<<<< HEAD
 if (kthread_should_stop())
 break;
-=======
-			if (kthread_should_stop())
-				break;
->>>>>>> parent of 3225e78... Finetuned Golden Governor
 
 spin_lock_irqsave(&up_cpumask_lock, flags);
 }
