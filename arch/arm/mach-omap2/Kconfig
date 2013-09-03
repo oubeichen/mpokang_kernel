@@ -374,6 +374,12 @@ config OMAP_C4_MPUOSWR
 	  Select this option to enable powering down the MPU logic
 	  in the C4 state reducing the power consumption.
 
+config OMAP_IPU_DEEPIDLE
+	bool "Enable C-states > C1 when IPU is active"
+	default n
+	help
+	  Enable C-states > C1 during hardware-accelerated video playback.
+
 config OMAP_FIQ_DEBUGGER
 	bool "Enable the serial FIQ debugger on OMAP"
 	default y
