@@ -25,6 +25,9 @@
 
 #include "iopgtable.h"
 
+
+#define SET_MPU_CORE_CONSTRAINT 10
+
 #define for_each_iotlb_cr(obj, n, __i, cr)				\
 	for (__i = 0;							\
 	     (__i < (n)) && (cr = __iotlb_read_cr((obj), __i), true);	\
