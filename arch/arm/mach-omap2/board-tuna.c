@@ -562,8 +562,8 @@ static struct regulator_consumer_supply tuna_vusim_supplies[] = {
 
 static struct regulator_init_data tuna_vusim = {
 	.constraints = {
-		.min_uV			= 2200000,
-		.max_uV 		= 2200000,
+		.min_uV			= 2000000,
+		.max_uV 		= 2000000,
 		.valid_modes_mask	= REGULATOR_MODE_NORMAL
 					| REGULATOR_MODE_STANDBY,
 		.valid_ops_mask	 	= REGULATOR_CHANGE_MODE
