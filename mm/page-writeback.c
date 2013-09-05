@@ -785,16 +785,16 @@ static struct notifier_block __cpuinitdata ratelimit_nb = {
 
 static void dirty_early_suspend(struct early_suspend *handler)
 {
-	dirty_background_ratio = 40;
-	vm_dirty_ratio = 60;
+	dirty_background_ratio = 30;
+	vm_dirty_ratio = 50;
 	dirty_writeback_interval = 2000;
 	dirty_expire_interval = 1000;
 }
 
 static void dirty_late_resume(struct early_suspend *handler)
 {
-	dirty_background_ratio = 10;
-	vm_dirty_ratio = 20;
+	dirty_background_ratio = 5;
+	vm_dirty_ratio = 15;
 	dirty_writeback_interval = 0;
 	dirty_expire_interval = 200;
 }
