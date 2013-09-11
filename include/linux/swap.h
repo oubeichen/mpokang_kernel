@@ -304,9 +304,11 @@ extern void kswapd_stop(int nid);
 extern int swap_readpage(struct page *);
 extern int swap_writepage(struct page *page, struct writeback_control *wbc);
 extern void end_swap_bio_read(struct bio *bio, int err);
+extern int __swap_writepage(struct page *page, struct writeback_control *wbc);
 
 /* linux/mm/swap_state.c */
 extern struct address_space swapper_space;
+extern int __add_to_swap_cache(struct page *page, swp_entry_t entry);
 #define total_swapcache_pages  swapper_space.nrpages
 extern void show_swap_cache_info(void);
 extern int add_to_swap(struct page *);
@@ -342,6 +344,7 @@ extern sector_t swapdev_block(int, pgoff_t);
 extern int reuse_swap_page(struct page *);
 extern int try_to_free_swap(struct page *);
 struct backing_dev_info;
+extern struct swap_info_struct *page_swap_info(struct page *);
 
 /* linux/mm/thrash.c */
 extern struct mm_struct *swap_token_mm;
