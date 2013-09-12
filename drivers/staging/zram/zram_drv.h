@@ -54,23 +54,9 @@ static const size_t max_zpage_size = PAGE_SIZE / 4 * 3;
 #define ZRAM_SECTOR_PER_LOGICAL_BLOCK	\
 	(1 << (ZRAM_LOGICAL_BLOCK_SHIFT - SECTOR_SHIFT))
 
-/* Flags for zram pages (table[page_no].flags) */
-enum zram_pageflags {
-	/* Page consists entirely of zeros */
-	ZRAM_ZERO,
-
-	__NR_ZRAM_PAGEFLAGS,
-};
+static const unsigned long zero_page_handle = (unsigned long)(-1);
 
 /*-- Data structures */
-
-/* Allocated for each disk page */
-struct table {
-	unsigned long handle;
-	u16 size;	/* object size (excluding header) */
-	u8 count;	/* object ref count (not yet used) */
-	u8 flags;
-} __aligned(4);
 
 struct zram_stats {
 	u64 compr_size;		/* compressed size of pages stored */
@@ -90,7 +76,7 @@ struct zram {
 	struct zs_pool *mem_pool;
 	void *compress_workmem;
 	void *compress_buffer;
-	struct table *table;
+	unsigned long *handle;	/* memory handle for each disk page */
 	spinlock_t stat64_lock;	/* protect 64-bit stats */
 	struct rw_semaphore lock; /* protect compression buffers and table
 				   * against concurrent read and writes */
