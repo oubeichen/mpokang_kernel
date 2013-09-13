@@ -38,11 +38,6 @@ void *zs_map_object(struct zs_pool *pool, unsigned long handle,
 enum zs_mapmode mm);
 void zs_unmap_object(struct zs_pool *pool, unsigned long handle);
 
-void zs_mem_read(struct zs_pool *pool, unsigned long handle,
-	void *dest, unsigned long src_off, size_t n);
-void zs_mem_write(struct zs_pool *pool, unsigned long handle,
-	const void *src, unsigned long dest_off, size_t n);
-
 u64 zs_get_total_size_bytes(struct zs_pool *pool);
 
 #endif
