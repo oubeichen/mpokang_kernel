@@ -359,10 +359,10 @@ static int zram_decompress_page(struct zram *zram, char *mem, u32 index)
 		return 0;
 	}
 
+	cmem = zs_map_object(zram->mem_pool, handle, ZS_MM_RO);
 	if (zram->table[index].size == PAGE_SIZE)
-		zs_mem_read(zram->mem_pool, handle, mem, 0, PAGE_SIZE);
-	else {
-		cmem = zs_map_object(zram->mem_pool, handle, ZS_MM_RO);
+		memcpy(mem, cmem, PAGE_SIZE);
+	else
 		ret = zram_comp_op(ZRAM_COMPOP_DECOMPRESS, cmem,
 					zram->table[index].size, mem, &clen);
 	zs_unmap_object(zram->mem_pool, handle);
@@ -435,7 +435,7 @@ static int zram_bvec_write(struct zram *zram, struct bio_vec *bvec, u32 index,
 	size_t clen;
 	unsigned long handle;
 	struct page *page;
-	unsigned char *user_mem, *src, *uncmem = NULL;
+	unsigned char *user_mem, *cmem, *src, *uncmem = NULL;
 
 	page = bvec->bv_page;
 	src = zram->compress_buffer;
@@ -513,13 +513,14 @@ static int zram_bvec_write(struct zram *zram, struct bio_vec *bvec, u32 index,
 		ret = -ENOMEM;
 		goto out;
 	}
+	cmem = zs_map_object(zram->mem_pool, handle, ZS_MM_WO);
 
 	if ((clen == PAGE_SIZE) && !is_partial_io(bvec))
 		src = kmap_atomic(page);
 	if ((clen == PAGE_SIZE) && !is_partial_io(bvec))
 		kunmap_atomic(src);
 
-	zs_mem_write(zram->mem_pool, handle, src, 0, clen);
+	zs_unmap_object(zram->mem_pool, handle);
 
 	zram->table[index].handle = handle;
 	zram->table[index].size = clen;
