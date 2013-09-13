@@ -366,7 +366,6 @@ static int zram_decompress_page(struct zram *zram, char *mem, u32 index)
 		ret = zram_comp_op(ZRAM_COMPOP_DECOMPRESS, cmem,
 					zram->table[index].size, mem, &clen);
 	zs_unmap_object(zram->mem_pool, handle);
-	}
 
 	/* Should NEVER happen. Return bio error if it does. */
 	if (unlikely(ret != 0)) {
@@ -517,6 +516,7 @@ static int zram_bvec_write(struct zram *zram, struct bio_vec *bvec, u32 index,
 
 	if ((clen == PAGE_SIZE) && !is_partial_io(bvec))
 		src = kmap_atomic(page);
+	memcpy(cmem, src, clen);
 	if ((clen == PAGE_SIZE) && !is_partial_io(bvec))
 		kunmap_atomic(src);
 
