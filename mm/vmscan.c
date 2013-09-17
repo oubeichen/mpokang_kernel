@@ -150,7 +150,7 @@ struct scan_control {
  */
 
 #if defined(CONFIG_ZRAM) || defined(CONFIG_FRONTSWAP)
-int vm_swappiness = 60;
+int vm_swappiness = 50;
 #else
 int vm_swappiness = 0;
 #endif
