@@ -79,9 +79,9 @@
  */
 
 #ifdef CONFIG_CLEANCACHE
-#define DEFAULT_VFS_CACHE_PRESSURE 125
+#define DEFAULT_VFS_CACHE_PRESSURE 100
 #else
-#define DEFAULT_VFS_CACHE_PRESSURE 45
+#define DEFAULT_VFS_CACHE_PRESSURE 50
 #endif
 
 int sysctl_vfs_cache_pressure __read_mostly, resume_cache_pressure;
