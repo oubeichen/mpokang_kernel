@@ -31,12 +31,6 @@ CONFIG_DEFCONFIG_LIST="/lib/modules/$UNAME_RELEASE/.config"
 CONFIG_HAVE_IRQ_WORK=y
 CONFIG_IRQ_WORK=y
 
-<<<<<<< HEAD:arch/arm/configs/askpkk_tuna_defconfig
-=======
-####################
-# AK Kernel Features
-####################
-
 #
 # Base Features
 #
