@@ -414,6 +414,4 @@ config OMAP_OVERRIDE_MPUTRIM
 	  Override factory-set trim value for MPU DPLL to allow locking at 
 	  rates >2.4GHz (required for MPU frequencies >1.2GHz).
 
-endmenu
-
 endif
