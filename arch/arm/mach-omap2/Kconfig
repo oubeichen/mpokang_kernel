@@ -450,4 +450,6 @@ config OMAP_REGULATOR_VOLTCHANGE
 	help
 	  Allow voltage changes for regulators.
 
+endmenu
+
 endif

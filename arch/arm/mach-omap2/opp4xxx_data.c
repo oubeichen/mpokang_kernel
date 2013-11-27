@@ -29,17 +29,6 @@
 #include "pm.h"
 
 /*
- * STD_FUSE_OPP_DPLL_1 contains info about ABB trim type for MPU/IVA.
- * This bit field definition is specific for OMAP4460 TURBO alone.
- * For future OMAP4 silicon it is possible that other efuse offsets might
- * be used in addition to controlling other OPPs as well.
- * This probably is an ugly location to put the DPLL trim details.. but,
- * alternatives are even less attractive :( shrug..
- */
-#define OMAP4460_MPU_OPP_DPLL_TRIM     BIT(18)
-#define OMAP4460_MPU_OPP_DPLL_TURBO_RBB        BIT(20)
-
-/*
  * Structures containing OMAP4430 voltage supported and various
  * voltage dependent data for each VDD.
  */
@@ -195,17 +184,6 @@ static struct omap_opp_def __initdata omap443x_opp_def_list[] = {
 	OPP_INITIALIZER("dss_dispc", "virt_lcd_pclk", "core", true, 170000000, OMAP4430_VDD_CORE_OPP100_UV),
 };
 
-<<<<<<< HEAD
-#define OMAP4460_VDD_MPU_OPP25_UV		 850000
-#define OMAP4460_VDD_MPU_OPP50_UV		 870000
-#define OMAP4460_VDD_MPU_OPP75_UV		 950000
-#define OMAP4460_VDD_MPU_OPP100_UV		1040000
-#define OMAP4460_VDD_MPU_OPPTURBO_UV		1170000
-#define OMAP4460_VDD_MPU_OPPNITRO_UV		1250000
-#define OMAP4460_VDD_MPU_OPP_1_UV		1300000
-#define OMAP4460_VDD_MPU_OPP_2_UV		1340000
-#define OMAP4460_VDD_MPU_OPP_3_UV		1380000
-=======
 #ifdef CONFIG_OPP4_UNDERVOLT
 #define OMAP4460_VDD_MPU_OPP15_UV       	810000
 #define OMAP4460_VDD_MPU_OPP25_UV       	830000
@@ -243,13 +221,9 @@ static struct omap_opp_def __initdata omap443x_opp_def_list[] = {
  #define OMAP4460_VDD_MPU_OPPNITRO_UV_OC2000		1450000
 #endif
 #endif
->>>>>>> 834cd28... Added kernel config options 'OMAP_SMARTREFLEX_CUSTOM_SENSOR',
 
 #ifdef CONFIG_OMAP_SMARTREFLEX_CUSTOM_SENSOR
 struct omap_volt_data omap446x_vdd_mpu_volt_data[] = {
-<<<<<<< HEAD
-	VOLT_DATA_DEFINE(OMAP4460_VDD_MPU_OPP25_UV, 0, OMAP44XX_CONTROL_FUSE_MPU_OPP50, 0xf4, 0x0c, OMAP_ABB_NOMINAL_OPP),
-=======
 	VOLT_DATA_DEFINE(OMAP4460_VDD_MPU_OPP15_UV, 10000, OMAP44XX_CONTROL_FUSE_MPU_OPP50, 0, 0, 0xf4, 0x0c, OMAP_ABB_NOMINAL_OPP),
 	VOLT_DATA_DEFINE(OMAP4460_VDD_MPU_OPP25_UV, 10000, OMAP44XX_CONTROL_FUSE_MPU_OPP50, 0, 0, 0xf4, 0x0c, OMAP_ABB_NOMINAL_OPP),
 	VOLT_DATA_DEFINE(OMAP4460_VDD_MPU_OPP50_UV, 10000, OMAP44XX_CONTROL_FUSE_MPU_OPP50, 0, 0, 0xf4, 0x0c, OMAP_ABB_NOMINAL_OPP),
@@ -279,23 +253,29 @@ struct omap_volt_data omap446x_vdd_mpu_volt_data[] = {
 #else
 	VOLT_DATA_DEFINE(OMAP4460_VDD_MPU_OPP15_UV, 10000, OMAP44XX_CONTROL_FUSE_MPU_OPP50, 0xf4, 0x0c, OMAP_ABB_NOMINAL_OPP),
 	VOLT_DATA_DEFINE(OMAP4460_VDD_MPU_OPP25_UV, 10000, OMAP44XX_CONTROL_FUSE_MPU_OPP50, 0xf4, 0x0c, OMAP_ABB_NOMINAL_OPP),
->>>>>>> 834cd28... Added kernel config options 'OMAP_SMARTREFLEX_CUSTOM_SENSOR',
 	VOLT_DATA_DEFINE(OMAP4460_VDD_MPU_OPP50_UV, 10000, OMAP44XX_CONTROL_FUSE_MPU_OPP50, 0xf4, 0x0c, OMAP_ABB_NOMINAL_OPP),
-	VOLT_DATA_DEFINE(OMAP4460_VDD_MPU_OPP75_UV, 80000, OMAP44XX_CONTROL_FUSE_MPU_OPP50, 0xf4, 0x0c, OMAP_ABB_NOMINAL_OPP),
+	VOLT_DATA_DEFINE(OMAP4460_VDD_MPU_OPP75_UV, 10000, OMAP44XX_CONTROL_FUSE_MPU_OPP50, 0xf4, 0x0c, OMAP_ABB_NOMINAL_OPP),
 	VOLT_DATA_DEFINE(OMAP4460_VDD_MPU_OPP100_UV, 0, OMAP44XX_CONTROL_FUSE_MPU_OPP100, 0xf9, 0x16, OMAP_ABB_NOMINAL_OPP),
-	VOLT_DATA_DEFINE(OMAP4460_VDD_MPU_OPPTURBO_UV, 10000, OMAP44XX_CONTROL_FUSE_MPU_OPPTURBO, 0xfa, 0x23, OMAP_ABB_NOMINAL_OPP),
+	VOLT_DATA_DEFINE(OMAP4460_VDD_MPU_OPP125_UV, 0, OMAP44XX_CONTROL_FUSE_MPU_OPP100, 0xf9, 0x16, OMAP_ABB_NOMINAL_OPP),
+	VOLT_DATA_DEFINE(OMAP4460_VDD_MPU_OPPTURBO_UV, 0, OMAP44XX_CONTROL_FUSE_MPU_OPPTURBO, 0xfa, 0x23, OMAP_ABB_NOMINAL_OPP),
+	VOLT_DATA_DEFINE(OMAP4460_VDD_MPU_OPPTURBOPLUS_UV, 0, OMAP44XX_CONTROL_FUSE_MPU_OPPTURBO, 0xfa, 0x23, OMAP_ABB_NOMINAL_OPP),
 	VOLT_DATA_DEFINE(OMAP4460_VDD_MPU_OPPNITRO_UV, 0, OMAP44XX_CONTROL_FUSE_MPU_OPPNITRO, 0xfa, 0x27, OMAP_ABB_FAST_OPP),
-	VOLT_DATA_DEFINE(OMAP4460_VDD_MPU_OPP_1_UV, 40000, OMAP44XX_CONTROL_FUSE_MPU_OPPNITRO, 0xfa, 0x27, OMAP_ABB_FAST_OPP),
-	VOLT_DATA_DEFINE(OMAP4460_VDD_MPU_OPP_2_UV, 80000, OMAP44XX_CONTROL_FUSE_MPU_OPPNITRO, 0xfa, 0x27, OMAP_ABB_FAST_OPP),
-	VOLT_DATA_DEFINE(OMAP4460_VDD_MPU_OPP_3_UV, 150000, OMAP44XX_CONTROL_FUSE_MPU_OPPNITRO, 0xfa, 0x27, OMAP_ABB_FAST_OPP),
+	VOLT_DATA_DEFINE(OMAP4460_VDD_MPU_OPPNITROPLUS_UV, 10000, OMAP44XX_CONTROL_FUSE_MPU_OPPNITRO, 0xfa, 0x27, OMAP_ABB_FAST_OPP),
 	VOLT_DATA_DEFINE(0, 0, 0, 0, 0, 0),
 };
 #endif
 
-#define OMAP4460_VDD_IVA_OPP50_UV		 890000
-#define OMAP4460_VDD_IVA_OPP100_UV		1000000
+#ifdef CONFIG_OPP4_UNDERVOLT
+#define OMAP4460_VDD_IVA_OPP50_UV		 	889000
+#define OMAP4460_VDD_IVA_OPP100_UV			1067000
+#define OMAP4460_VDD_IVA_OPPTURBO_UV		1207000
+#define OMAP4460_VDD_IVA_OPPNITRO_UV		1286000
+#else
+#define OMAP4460_VDD_IVA_OPP50_UV		 	950000
+#define OMAP4460_VDD_IVA_OPP100_UV			1140000
 #define OMAP4460_VDD_IVA_OPPTURBO_UV		1291000
 #define OMAP4460_VDD_IVA_OPPNITRO_UV		1375000
+#endif
 
 #ifdef CONFIG_OMAP_SMARTREFLEX_CUSTOM_SENSOR
 struct omap_volt_data omap446x_vdd_iva_volt_data[] = {
@@ -315,12 +295,6 @@ struct omap_volt_data omap446x_vdd_iva_volt_data[] = {
 };
 #endif
 
-<<<<<<< HEAD
-#define OMAP4460_VDD_CORE_OPP50_UV		 910000
-#define OMAP4460_VDD_CORE_OPP75_UV		1050000
-#define OMAP4460_VDD_CORE_OPP100_UV		1075000
-#define OMAP4460_VDD_CORE_OPP100_OV_UV		1120000
-=======
 #ifdef CONFIG_OPP4_UNDERVOLT
 #define OMAP4460_VDD_CORE_OPP25_UV		850000
 #define OMAP4460_VDD_CORE_OPP50_UV		875000
@@ -332,7 +306,6 @@ struct omap_volt_data omap446x_vdd_iva_volt_data[] = {
 #define OMAP4460_VDD_CORE_OPP100_UV		1127000
 #define OMAP4460_VDD_CORE_OPP100_OV_UV	1127000
 #endif
->>>>>>> 834cd28... Added kernel config options 'OMAP_SMARTREFLEX_CUSTOM_SENSOR',
 
 #ifdef CONFIG_OMAP_SMARTREFLEX_CUSTOM_SENSOR
 struct omap_volt_data omap446x_vdd_core_volt_data[] = {
@@ -344,32 +317,16 @@ struct omap_volt_data omap446x_vdd_core_volt_data[] = {
 };
 #else
 struct omap_volt_data omap446x_vdd_core_volt_data[] = {
-<<<<<<< HEAD
-	
-=======
 	VOLT_DATA_DEFINE(OMAP4460_VDD_CORE_OPP25_UV, 38000, OMAP44XX_CONTROL_FUSE_CORE_OPP50, 0xf4, 0x0c, OMAP_ABB_NONE),
->>>>>>> 834cd28... Added kernel config options 'OMAP_SMARTREFLEX_CUSTOM_SENSOR',
 	VOLT_DATA_DEFINE(OMAP4460_VDD_CORE_OPP50_UV, 38000, OMAP44XX_CONTROL_FUSE_CORE_OPP50, 0xf4, 0x0c, OMAP_ABB_NONE),
-	VOLT_DATA_DEFINE(OMAP4460_VDD_CORE_OPP75_UV, 13000, OMAP44XX_CONTROL_FUSE_CORE_OPP100, 0xf9, 0x16, OMAP_ABB_NONE),
-	VOLT_DATA_DEFINE(OMAP4460_VDD_CORE_OPP100_UV, 13000, OMAP44XX_CONTROL_FUSE_CORE_OPP100OV, 0xf9, 0x16, OMAP_ABB_NONE),
-	VOLT_DATA_DEFINE(OMAP4460_VDD_CORE_OPP100_OV_UV, 75000, OMAP44XX_CONTROL_FUSE_CORE_OPP100OV, 0xf9, 0x16, OMAP_ABB_NONE),
+	VOLT_DATA_DEFINE(OMAP4460_VDD_CORE_OPP100_UV, 13000, OMAP44XX_CONTROL_FUSE_CORE_OPP100, 0xf9, 0x16, OMAP_ABB_NONE),
+	VOLT_DATA_DEFINE(OMAP4460_VDD_CORE_OPP100_OV_UV, 13000, OMAP44XX_CONTROL_FUSE_CORE_OPP100OV, 0xf9, 0x16, OMAP_ABB_NONE),
 	VOLT_DATA_DEFINE(0, 0, 0, 0, 0, 0),
 };
 #endif
 
 /* OMAP 4460 MPU Core VDD dependency table */
 static struct omap_vdd_dep_volt omap446x_vdd_mpu_core_dep_data[] = {
-<<<<<<< HEAD
-	{.main_vdd_volt = OMAP4460_VDD_MPU_OPP25_UV, .dep_vdd_volt = OMAP4460_VDD_CORE_OPP50_UV},
-	{.main_vdd_volt = OMAP4460_VDD_MPU_OPP50_UV, .dep_vdd_volt = OMAP4460_VDD_CORE_OPP50_UV},
-	{.main_vdd_volt = OMAP4460_VDD_MPU_OPP75_UV, .dep_vdd_volt = OMAP4460_VDD_CORE_OPP50_UV},
-	{.main_vdd_volt = OMAP4460_VDD_MPU_OPP100_UV, .dep_vdd_volt = OMAP4460_VDD_CORE_OPP75_UV},
-	{.main_vdd_volt = OMAP4460_VDD_MPU_OPPTURBO_UV, .dep_vdd_volt = OMAP4460_VDD_CORE_OPP75_UV},
-	{.main_vdd_volt = OMAP4460_VDD_MPU_OPPNITRO_UV, .dep_vdd_volt = OMAP4460_VDD_CORE_OPP75_UV},
-	{.main_vdd_volt = OMAP4460_VDD_MPU_OPP_1_UV, .dep_vdd_volt = OMAP4460_VDD_CORE_OPP75_UV},
-	{.main_vdd_volt = OMAP4460_VDD_MPU_OPP_2_UV, .dep_vdd_volt = OMAP4460_VDD_CORE_OPP75_UV},
-	{.main_vdd_volt = OMAP4460_VDD_MPU_OPP_3_UV, .dep_vdd_volt = OMAP4460_VDD_CORE_OPP75_UV},
-=======
 	{.main_vdd_volt = OMAP4460_VDD_MPU_OPP15_UV, .dep_vdd_volt = OMAP4460_VDD_CORE_OPP25_UV},
 	{.main_vdd_volt = OMAP4460_VDD_MPU_OPP25_UV, .dep_vdd_volt = OMAP4460_VDD_CORE_OPP25_UV},
 	{.main_vdd_volt = OMAP4460_VDD_MPU_OPP50_UV, .dep_vdd_volt = OMAP4460_VDD_CORE_OPP50_UV},
@@ -394,7 +351,6 @@ static struct omap_vdd_dep_volt omap446x_vdd_mpu_core_dep_data[] = {
 #ifdef CONFIG_OMAP_OCFREQ_2000
 	{.main_vdd_volt = OMAP4460_VDD_MPU_OPPNITRO_UV_OC2000, .dep_vdd_volt = OMAP4460_VDD_CORE_OPP100_UV},
 #endif
->>>>>>> 834cd28... Added kernel config options 'OMAP_SMARTREFLEX_CUSTOM_SENSOR',
 };
 
 struct omap_vdd_dep_info omap446x_vddmpu_dep_info[] = {
@@ -409,9 +365,9 @@ struct omap_vdd_dep_info omap446x_vddmpu_dep_info[] = {
 /* OMAP 4460 MPU IVA VDD dependency table */
 static struct omap_vdd_dep_volt omap446x_vdd_iva_core_dep_data[] = {
 	{.main_vdd_volt = OMAP4460_VDD_IVA_OPP50_UV, .dep_vdd_volt = OMAP4460_VDD_CORE_OPP50_UV},
-	{.main_vdd_volt = OMAP4460_VDD_IVA_OPP100_UV, .dep_vdd_volt = OMAP4460_VDD_CORE_OPP75_UV},
-	{.main_vdd_volt = OMAP4460_VDD_IVA_OPPTURBO_UV, .dep_vdd_volt = OMAP4460_VDD_CORE_OPP75_UV},
-	{.main_vdd_volt = OMAP4460_VDD_IVA_OPPNITRO_UV, .dep_vdd_volt = OMAP4460_VDD_CORE_OPP75_UV},
+	{.main_vdd_volt = OMAP4460_VDD_IVA_OPP100_UV, .dep_vdd_volt = OMAP4460_VDD_CORE_OPP100_UV},
+	{.main_vdd_volt = OMAP4460_VDD_IVA_OPPTURBO_UV, .dep_vdd_volt = OMAP4460_VDD_CORE_OPP100_UV},
+	{.main_vdd_volt = OMAP4460_VDD_IVA_OPPNITRO_UV, .dep_vdd_volt = OMAP4460_VDD_CORE_OPP100_UV},
 };
 
 struct omap_vdd_dep_info omap446x_vddiva_dep_info[] = {
@@ -424,22 +380,21 @@ struct omap_vdd_dep_info omap446x_vddiva_dep_info[] = {
 };
 
 static struct omap_opp_def __initdata omap446x_opp_def_list[] = {
-	OPP_INITIALIZER("mpu", "virt_dpll_mpu_ck", "mpu", true, 192000000, OMAP4460_VDD_MPU_OPP25_UV),
+	/* MPU OPP1 - OPP25 */
+#ifdef CONFIG_UNLOCK_LOW_FREQS
+	OPP_INITIALIZER("mpu", "virt_dpll_mpu_ck", "mpu", true, 180000000, OMAP4460_VDD_MPU_OPP15_UV),
+	OPP_INITIALIZER("mpu", "virt_dpll_mpu_ck", "mpu", true, 230000000, OMAP4460_VDD_MPU_OPP25_UV),
+#endif
 	/* MPU OPP1 - OPP50 */
-	OPP_INITIALIZER("mpu", "virt_dpll_mpu_ck", "mpu", true, 384000000, OMAP4460_VDD_MPU_OPP50_UV),
-	OPP_INITIALIZER("mpu", "virt_dpll_mpu_ck", "mpu", true, 537600000, OMAP4460_VDD_MPU_OPP75_UV),
+	OPP_INITIALIZER("mpu", "virt_dpll_mpu_ck", "mpu", true, 350000000, OMAP4460_VDD_MPU_OPP50_UV),
+	OPP_INITIALIZER("mpu", "virt_dpll_mpu_ck", "mpu", true, 525000000, OMAP4460_VDD_MPU_OPP75_UV),
 	/* MPU OPP2 - OPP100 */
-	OPP_INITIALIZER("mpu", "virt_dpll_mpu_ck", "mpu", true, 729600000, OMAP4460_VDD_MPU_OPP100_UV),
+	OPP_INITIALIZER("mpu", "virt_dpll_mpu_ck", "mpu", true, 700000000, OMAP4460_VDD_MPU_OPP100_UV),
+	OPP_INITIALIZER("mpu", "virt_dpll_mpu_ck", "mpu", true, 810000000, OMAP4460_VDD_MPU_OPP125_UV),
 	/* MPU OPP3 - OPP-Turbo */
-	OPP_INITIALIZER("mpu", "virt_dpll_mpu_ck", "mpu", true, 1036800000, OMAP4460_VDD_MPU_OPPTURBO_UV),
+	OPP_INITIALIZER("mpu", "virt_dpll_mpu_ck", "mpu", true, 920000000, OMAP4460_VDD_MPU_OPPTURBO_UV),
+	OPP_INITIALIZER("mpu", "virt_dpll_mpu_ck", "mpu", true, 1060000000, OMAP4460_VDD_MPU_OPPTURBOPLUS_UV),
 	/* MPU OPP4 - OPP-Nitro */
-<<<<<<< HEAD
-	OPP_INITIALIZER("mpu", "virt_dpll_mpu_ck", "mpu", false, 1228800000, OMAP4460_VDD_MPU_OPPNITRO_UV),
-	/* MPU OPP4 - OPP-Nitro SpeedBin */
-	OPP_INITIALIZER("mpu", "virt_dpll_mpu_ck", "mpu", false, 1344000000, OMAP4460_VDD_MPU_OPP_1_UV),
-	OPP_INITIALIZER("mpu", "virt_dpll_mpu_ck", "mpu", false, 1420800000, OMAP4460_VDD_MPU_OPP_2_UV),
-	OPP_INITIALIZER("mpu", "virt_dpll_mpu_ck", "mpu", false, 1536000000, OMAP4460_VDD_MPU_OPP_3_UV),
-=======
 	OPP_INITIALIZER("mpu", "virt_dpll_mpu_ck", "mpu", false, 1200000000, OMAP4460_VDD_MPU_OPPNITRO_UV),
 	OPP_INITIALIZER("mpu", "virt_dpll_mpu_ck", "mpu", false, 1350000000, OMAP4460_VDD_MPU_OPPNITROPLUS_UV),
 #ifdef CONFIG_OMAP_OCFREQ_1400
@@ -458,12 +413,11 @@ static struct omap_opp_def __initdata omap446x_opp_def_list[] = {
 #endif
 	/* MPU OPP4 - OPP-Nitro SpeedBin */
 	OPP_INITIALIZER("mpu", "virt_dpll_mpu_ck", "mpu", false, 1500000000, OMAP4460_VDD_MPU_OPPNITRO_UV),
->>>>>>> 834cd28... Added kernel config options 'OMAP_SMARTREFLEX_CUSTOM_SENSOR',
 	/* L3 OPP1 - OPP50 */
 	OPP_INITIALIZER("l3_main_1", "virt_l3_ck", "core", true, 100000000, OMAP4460_VDD_CORE_OPP50_UV),
 	/* L3 OPP2 - OPP100 */
-	OPP_INITIALIZER("l3_main_1", "virt_l3_ck", "core", true, 200000000, OMAP4460_VDD_CORE_OPP75_UV),
 	OPP_INITIALIZER("l3_main_1", "virt_l3_ck", "core", true, 200000000, OMAP4460_VDD_CORE_OPP100_UV),
+	OPP_INITIALIZER("l3_main_1", "virt_l3_ck", "core", true, 200000000, OMAP4460_VDD_CORE_OPP100_OV_UV),
 	/* IVA OPP1 - OPP50 */
 	OPP_INITIALIZER("iva", "virt_iva_ck", "iva", true, 133000000, OMAP4460_VDD_IVA_OPP50_UV),
 	/* IVA OPP2 - OPP100 */
@@ -483,17 +437,15 @@ static struct omap_opp_def __initdata omap446x_opp_def_list[] = {
 	/* SGX OPP1 - OPP50 */
 	OPP_INITIALIZER("gpu", "dpll_per_m7x2_ck", "core", true, 153600000, OMAP4460_VDD_CORE_OPP50_UV),
 	/* SGX OPP2 - OPP100 */
-	OPP_INITIALIZER("gpu", "dpll_per_m7x2_ck", "core", false, 307200000, OMAP4460_VDD_CORE_OPP75_UV),
-	/* SGX OPP3 - OPPOV */
 	OPP_INITIALIZER("gpu", "dpll_per_m7x2_ck", "core", true, 384000000, OMAP4460_VDD_CORE_OPP100_UV),
 	/* SGX OPP3 - OPPOV */
-	OPP_INITIALIZER("gpu", "dpll_per_m7x2_ck", "core", false, 512000000, OMAP4460_VDD_CORE_OPP100_OV_UV),
+	OPP_INITIALIZER("gpu", "dpll_per_m7x2_ck", "core", false, 384000000, OMAP4460_VDD_CORE_OPP100_OV_UV),
 	/* FDIF OPP1 - OPP25 */
 	OPP_INITIALIZER("fdif", "fdif_fck", "core", true, 32000000, OMAP4460_VDD_CORE_OPP50_UV),
 	/* FDIF OPP2 - OPP50 */
 	OPP_INITIALIZER("fdif", "fdif_fck", "core", true, 64000000, OMAP4460_VDD_CORE_OPP50_UV),
 	/* FDIF OPP3 - OPP100 */
-	OPP_INITIALIZER("fdif", "fdif_fck", "core", true, 128000000, OMAP4460_VDD_CORE_OPP75_UV),
+	OPP_INITIALIZER("fdif", "fdif_fck", "core", true, 128000000, OMAP4460_VDD_CORE_OPP100_UV),
 	/* DSP OPP1 - OPP50 */
 	OPP_INITIALIZER("dsp", "virt_dsp_ck", "iva", true, 232750000, OMAP4460_VDD_IVA_OPP50_UV),
 	/* DSP OPP2 - OPP100 */
@@ -503,7 +455,7 @@ static struct omap_opp_def __initdata omap446x_opp_def_list[] = {
 	/* HSI OPP1 - OPP50 */
 	OPP_INITIALIZER("hsi", "hsi_fck", "core", true, 96000000, OMAP4460_VDD_CORE_OPP50_UV),
 	/* HSI OPP2 - OPP100 */
-	OPP_INITIALIZER("hsi", "hsi_fck", "core", true, 96000000, OMAP4460_VDD_CORE_OPP75_UV),
+	OPP_INITIALIZER("hsi", "hsi_fck", "core", true, 96000000, OMAP4460_VDD_CORE_OPP100_UV),
 	/* ABE OPP1 - OPP50 */
 	OPP_INITIALIZER("aess", "abe_clk", "iva", true, 98304000, OMAP4460_VDD_IVA_OPP50_UV),
 	/* ABE OPP2 - OPP100 */
@@ -511,11 +463,7 @@ static struct omap_opp_def __initdata omap446x_opp_def_list[] = {
 	/* DSS OPP1 - OPP50 */
 	OPP_INITIALIZER("dss_dispc", "virt_lcd_pclk", "core", true, 93000000, OMAP4460_VDD_CORE_OPP50_UV),
 	/* DSS OPP2 - OPP100 */
-<<<<<<< HEAD
-	OPP_INITIALIZER("dss_dispc", "virt_lcd_pclk", "core", true, 170000000, OMAP4460_VDD_CORE_OPP75_UV),
-=======
 	OPP_INITIALIZER("dss_dispc", "virt_lcd_pclk", "core", true, 170000000, OMAP4460_VDD_CORE_OPP100_UV),
->>>>>>> 834cd28... Added kernel config options 'OMAP_SMARTREFLEX_CUSTOM_SENSOR',
 };
 
 /**
@@ -541,104 +489,12 @@ static void __init omap4_mpu_opp_enable(unsigned long freq)
 }
 
 /**
- * omap4_abb_update() - update the ABB map for a specific voltage in table
- * @vtable:    voltage table to update
- * @voltage:   voltage whose voltage data needs update
- * @abb_type:  what ABB type should we update it to?
- */
-static void __init omap4_abb_update(struct omap_volt_data *vtable,
-                                   unsigned long voltage, int abb_type)
-{
-	/* scan through and update the voltage table */
-	while (vtable->volt_nominal) {
-		if (vtable->volt_nominal == voltage) {
-			vtable->abb_type = abb_type;
-			return;
-		}
-		vtable++;
-	}
-	/* WARN noticably to get the developer to fix */
-	WARN(1, "%s: voltage %ld could not be set to ABB %d\n",
-		__func__, voltage, abb_type);
-}
-
-/**
- * omap4460_abb_update() - update the abb mapping quirks for OMAP4460
- */
-static void __init omap4460_abb_update(void)
-{
-	u32 reg, trim, rbb;
-	char *abb_msg;
-	int abb_type;
-
-	/*
-	 * Determine MPU ABB state at OPP_TURBO on 4460
-	 *
-	 * On 4460 all OPPs have preset states for the MPU's ABB LDO, except
-	 * for OPP_TURBO.  OPP_TURBO may require bypass, FBB or RBB depending
-	 * on a combination of characterisation data blown into eFuse register
-	 * CONTROL_STD_FUSE_OPP_DPLL_1.
-	 *
-	 * Bits 18 & 19 of that register signify DPLL_MPU trim (see
-	 * arch/arm/mach-omap2/omap4-trim-quirks.c). OPP_TURBO might put MPU's
-	 * ABB LDO into bypass or FBB based on this value.
-	 *
-	 * Bit 20 siginifies if RBB should be enabled. If set it will always
-	 * override the values from bits 18 & 19.
-	 *
-	 * The table below captures the valid combinations:
-	 * trim          rbb
-	 * Bit 18|Bit 19|Bit 20|ABB type
-	 * 0      0      0      bypass
-	 * 0      1      0      bypass  (invalid combination)
-	 * 1      0      0      FBB     (2.4GHz DPLL_MPU)
-	 * 1      1      0      FBB     (3GHz DPLL_MPU)
-	 * 0      0      1      RBB
-	 * 0      1      1      RBB     (invalid combination)
-	 * 1      0      1      RBB     (2.4GHz DPLL_MPU)
-	 * 1      1      1      RBB     (3GHz DPLL_MPU)
-	 */
-	reg = omap_ctrl_readl(OMAP4_CTRL_MODULE_CORE_STD_FUSE_OPP_DPLL_1);
-	trim = reg & OMAP4460_MPU_OPP_DPLL_TRIM;
-	rbb = reg & OMAP4460_MPU_OPP_DPLL_TURBO_RBB;
-
-	if (rbb) {
-		abb_type = OMAP_ABB_SLOW_OPP;
-		abb_msg = "Slow";
-	} else if (!trim) {
-		abb_type = OMAP_ABB_NOMINAL_OPP;
-		abb_msg = "un-trimmed Nominal";
-	} else {
-		abb_type = OMAP_ABB_FAST_OPP;
-		abb_msg = "Fast";
-	}
-
-	omap4_abb_update(omap446x_vdd_mpu_volt_data,
-			OMAP4460_VDD_MPU_OPPTURBO_UV,
-			abb_type);
-	pr_info("%s: MPU OPP Turbo: %s OPP ABB type\n", __func__, abb_msg);
-}
-
-/**
  * omap4_opp_init() - initialize omap4 opp table
  */
 int __init omap4_opp_init(void)
 {
 	int r = -ENODEV;
 
-<<<<<<< HEAD
-	r = omap_init_opp_table(omap446x_opp_def_list,
-		ARRAY_SIZE(omap446x_opp_def_list));
-
-	omap4_mpu_opp_enable(1228800000);
-	omap4_mpu_opp_enable(1344000000);
-	omap4_mpu_opp_enable(1420800000);
-	omap4_mpu_opp_enable(1536000000);
-
-	/* Update ABB settings */
-	if (cpu_is_omap446x())
-		omap4460_abb_update();
-=======
 	if (!cpu_is_omap44xx())
 		return r;
 	if (cpu_is_omap443x())
@@ -666,7 +522,6 @@ int __init omap4_opp_init(void)
 			omap4_mpu_opp_enable(1800000000);
 #endif
 	}
->>>>>>> 834cd28... Added kernel config options 'OMAP_SMARTREFLEX_CUSTOM_SENSOR',
 
 	return r;
 }
