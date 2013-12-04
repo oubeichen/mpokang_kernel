@@ -29,6 +29,7 @@
 #include <linux/compiler.h>
 #include <linux/types.h>
 #include <linux/init.h>
+#include <linux/sched.h>
 #include <asm/atomic.h>
 #include "crc32defs.h"
 
